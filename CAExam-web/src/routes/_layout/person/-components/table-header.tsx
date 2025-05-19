@@ -1,14 +1,8 @@
 import { Input } from "@/components/ui/input";
-// import { usePersonTableStore } from "./use-person-table-store";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export const TableHeader = () => {
-  // const { term, setTerm } = usePersonTableStore((state) => ({
-  //   term: state.term,
-  //   setTerm: state.setTerm,
-  // }));
-
   const [term, setTerm] = useState<string>();
 
   return (

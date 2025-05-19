@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// import type { AuthData, UserData } from "@/auth";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthStore } from "@/components/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// import { getUrl } from "@/utils/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-// import axios from "axios";
-// import useAxios from "axios-hooks";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -29,7 +25,7 @@ const registerSchema = z
       .min(6, "Password must be at least 6 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
       ),
     confirmPassword: z.string(),
   })
@@ -59,9 +55,10 @@ export const RegisterForm = () => {
       toast.success("Welcome! Please complete your profile.");
     } catch (error: any) {
       console.error("Registration error:", error);
-      const errorMessage = error.response?.data?.errors?.DuplicateUserName?.[0]
-        || error.response?.data?.message
-        || "Failed to register. Please try again.";
+      const errorMessage =
+        error.response?.data?.errors?.DuplicateUserName?.[0] ||
+        error.response?.data?.message ||
+        "Failed to register. Please try again.";
       toast.error(errorMessage);
     }
   };
@@ -151,7 +148,9 @@ export const RegisterForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">Register</Button>
+        <Button type="submit" className="w-full">
+          Register
+        </Button>
       </form>
     </Form>
   );

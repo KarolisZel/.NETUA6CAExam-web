@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthStore } from "@/components/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,7 +38,10 @@ export const LoginForm = () => {
       toast.success("Welcome back!");
     } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error.response?.data?.message || "Failed to login. Please check your credentials.");
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to login. Please check your credentials.",
+      );
     }
   };
 
@@ -83,7 +86,9 @@ export const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Login</Button>
+        <Button type="submit" className="w-full">
+          Login
+        </Button>
       </form>
     </Form>
   );

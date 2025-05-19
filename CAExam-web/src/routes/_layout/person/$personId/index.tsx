@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createFileRoute } from "@tanstack/react-router";
 import useAxios from "axios-hooks";
 import type { GetPerson, GetResidence } from "@/types";
@@ -51,15 +52,15 @@ const PersonPage = () => {
       method: "DELETE",
       headers: createAuthHeader(auth),
     },
-    { manual: true }
+    { manual: true },
   );
 
   // Debug logs
   useEffect(() => {
-    console.log('Auth token:', !!auth?.token);
-    console.log('Person data:', personData);
-    console.log('Residence ID:', personData?.residenceId);
-    console.log('Residence data:', residenceData);
+    console.log("Auth token:", !!auth?.token);
+    console.log("Person data:", personData);
+    console.log("Residence ID:", personData?.residenceId);
+    console.log("Residence data:", residenceData);
   }, [auth?.token, personData, residenceData]);
 
   useEffect(() => {
@@ -89,7 +90,8 @@ const PersonPage = () => {
 
   const handleDelete = async () => {
     // Check if the person belongs to the current user or if the user is an admin
-    const isAuthorized = personData?.userId === user?.id || user?.role === "Admin";
+    const isAuthorized =
+      personData?.userId === user?.id || user?.role === "Admin";
     if (!isAuthorized) {
       toast.error("You can only delete your own profile");
       return;
@@ -108,7 +110,10 @@ const PersonPage = () => {
       if (error.response?.status === 404) {
         toast.error("Person not found");
       } else {
-        toast.error("Failed to delete person - " + (error.response?.data || "unknown error"));
+        toast.error(
+          "Failed to delete person - " +
+            (error.response?.data || "unknown error"),
+        );
       }
       console.error("Delete error:", error);
     }
@@ -134,16 +139,19 @@ const PersonPage = () => {
         <h1 className="text-5xl font-bold">
           {personData.firstName + " " + personData.lastName}
         </h1>
-        <div className="font-semibold">Person code: {personData.personCode}</div>
+        <div className="font-semibold">
+          Person code: {personData.personCode}
+        </div>
         <div className="font-semibold">Phone: {personData.phoneNumber}</div>
         <div className="font-semibold">Email: {personData.email}</div>
         <div className="font-semibold">
           Residence:
           {residenceData
-            ? `${residenceData.street} ${residenceData.streetNumber}${residenceData.apartmentNumber
-              ? `, Apt ${residenceData.apartmentNumber}`
-              : ""
-            } | ${residenceData.city}, ${residenceData.country}`
+            ? `${residenceData.street} ${residenceData.streetNumber}${
+                residenceData.apartmentNumber
+                  ? `, Apt ${residenceData.apartmentNumber}`
+                  : ""
+              } | ${residenceData.city}, ${residenceData.country}`
             : "Loading..."}
         </div>
       </div>
@@ -165,8 +173,8 @@ const PersonPage = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this person
-                  and all associated data from the system.
+                  This action cannot be undone. This will permanently delete
+                  this person and all associated data from the system.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

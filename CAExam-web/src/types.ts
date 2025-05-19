@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 export interface Option<T> {
   value: T;
   label: string;
@@ -40,7 +41,7 @@ export interface GetResidence {
 }
 
 // Full Residence type (for update operations if needed)
-export interface Residence extends GetResidence { }
+export interface Residence extends GetResidence {}
 
 export interface ProfilePhoto {
   id: string;

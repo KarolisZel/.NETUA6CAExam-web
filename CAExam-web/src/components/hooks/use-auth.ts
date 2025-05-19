@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AuthData, UserData } from "@/auth";
@@ -6,7 +7,11 @@ import { getUrl } from "@/utils/navigation";
 
 type Actions = {
   logout: () => void;
-  register: (email: string, password: string, username: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    username: string,
+  ) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   updateUser: (userData: UserData) => void;
 };
@@ -21,7 +26,7 @@ const convertAuthFormat = (oldAuth: any): AuthData | null => {
   if (!oldAuth?.accessToken) return null;
   return {
     token: oldAuth.accessToken,
-    user: oldAuth.user || null
+    user: oldAuth.user || null,
   };
 };
 
@@ -36,26 +41,29 @@ export const useAuthStore = create<State & Actions>()(
       updateUser: (userData: UserData) => {
         set((state) => ({
           user: userData,
-          auth: state.auth ? { ...state.auth, user: userData } : null
+          auth: state.auth ? { ...state.auth, user: userData } : null,
         }));
       },
       register: async (email: string, password: string, username: string) => {
         try {
           // Step 1: Register the user
-          const registerResponse = await axios.post(
-            getUrl("register"),
-            { email, password, username }
-          );
+          const registerResponse = await axios.post(getUrl("register"), {
+            email,
+            password,
+            username,
+          });
 
           if (registerResponse.status < 200 || registerResponse.status >= 300) {
-            throw new Error(`Registration failed with status ${registerResponse.status}`);
+            throw new Error(
+              `Registration failed with status ${registerResponse.status}`,
+            );
           }
 
           // Step 2: Login to get auth token
-          const loginResponse = await axios.post<AuthData>(
-            getUrl("login"),
-            { email, password }
-          );
+          const loginResponse = await axios.post<AuthData>(getUrl("login"), {
+            email,
+            password,
+          });
 
           if (loginResponse.status < 200 || loginResponse.status >= 300) {
             throw new Error("Failed to login after registration");
@@ -67,7 +75,7 @@ export const useAuthStore = create<State & Actions>()(
           if ((loginResponse.data as any).accessToken) {
             authData = {
               token: (loginResponse.data as any).accessToken,
-              user: (loginResponse.data as any).user || null
+              user: (loginResponse.data as any).user || null,
             };
           } else if ((loginResponse.data as any).token) {
             authData = loginResponse.data as AuthData;
@@ -83,9 +91,9 @@ export const useAuthStore = create<State & Actions>()(
               getUrl(["user", "me"]),
               {
                 headers: {
-                  Authorization: `Bearer ${authData.token}`
-                }
-              }
+                  Authorization: `Bearer ${authData.token}`,
+                },
+              },
             );
             authData.user = userResponse.data;
           }
@@ -96,21 +104,25 @@ export const useAuthStore = create<State & Actions>()(
             user: authData.user,
           });
         } catch (error: any) {
-          console.error('Registration error:', error);
+          console.error("Registration error:", error);
 
           if (error.response?.data?.errors?.DuplicateUserName) {
             throw error;
           }
 
-          throw new Error(error.response?.data?.message || "Failed to register. Please try again.");
+          throw new Error(
+            error.response?.data?.message ||
+              "Failed to register. Please try again.",
+          );
         }
       },
       login: async (email: string, password: string) => {
-        const response = await axios.post<AuthData>(
-          getUrl("login"),
-          { email, password }
-        );
-        if (response.status < 200 || response.status >= 300) throw new Error("Failed to login");
+        const response = await axios.post<AuthData>(getUrl("login"), {
+          email,
+          password,
+        });
+        if (response.status < 200 || response.status >= 300)
+          throw new Error("Failed to login");
 
         // Convert old format to new format if needed
         const authData = (response.data as any).accessToken
@@ -128,9 +140,9 @@ export const useAuthStore = create<State & Actions>()(
               getUrl(["user", "me"]),
               {
                 headers: {
-                  Authorization: `Bearer ${authData.token}`
-                }
-              }
+                  Authorization: `Bearer ${authData.token}`,
+                },
+              },
             );
             authData.user = userResponse.data;
           } catch (error) {
